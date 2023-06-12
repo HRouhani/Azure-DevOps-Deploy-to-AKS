@@ -75,3 +75,20 @@ stages:
           $(Pipeline.Workspace)/manifests/service.yml
         containers: '$(acrdevurl)/$(imageRepo):$(tag)'
         imagePullSecrets: '$(k8s-secret)'
+
+
+- stage: ScanwithCnspec
+  jobs:
+  - job: ScanImage
+    steps:
+    - script: |
+        bash -c "$(curl -sSL https://install.mondoo.com/sh)"
+        cnspec version
+      displayName: "Install cnspec"
+    
+    - script: |
+        # be sure to change the score-threshold value to control the minimum accepted asset score before CI jobs fail
+        cnspec scan k8s $(Pipeline.Workspace)/manifests/deployment.yml --score-threshold 100
+      displayName: "Scan Manifests with cnspec"
+      #env:
+      #  MONDOO_CONFIG_BASE64: $(MONDOO_CONFIG_BASE64)
