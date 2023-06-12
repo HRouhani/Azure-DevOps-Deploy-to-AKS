@@ -42,7 +42,7 @@ stages:
   dependsOn: Build
   variables:
     k8s-secret: k8sauth
-    #acrdevurl: 'k8sexamplesacr.azurecr.io'
+    acrdevurl: 'securityimages.azurecr.io'
     #replicaNo: 3
   jobs:
   - job: Deploy
@@ -74,4 +74,4 @@ stages:
           $(Pipeline.Workspace)/manifests/deployment.yml
           $(Pipeline.Workspace)/manifests/service.yml
         containers: '$(acrdevurl)/$(imageRepo):$(tag)'
-        imagePullSecrets: '$(acrsecret)'
+        imagePullSecrets: '$(k8s-secret)'
