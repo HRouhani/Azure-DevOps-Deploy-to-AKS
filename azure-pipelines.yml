@@ -5,8 +5,11 @@ resources:
 - repo: self
 
 variables:
-  imageRepo: sampleapp
-  tag: '$(Build.BuildId)'
+  #imageRepo: sampleapp
+  imageNamespace: sampleapp.azurecr.io
+  imageName: sampleapp.azurecr.io:latest
+  #tag: '$(Build.BuildId)'
+  tag: latest
 
 stages:
 
