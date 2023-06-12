@@ -60,7 +60,7 @@ stages:
         kubernetesServiceConnection: 'k8s-connection-default'
         namespace: 'default'
         secretType: 'dockerRegistry'
-        secretName: '$(k8s-secret))'
+        secretName: '$(k8s-secret)'
         dockerRegistryEndpoint: 'AzureRegistery'
     - task: KubernetesManifest@0
       inputs:
