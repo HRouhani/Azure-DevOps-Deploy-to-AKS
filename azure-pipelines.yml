@@ -9,6 +9,7 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
+
 - stage: Build
   displayName: Build image
   jobs:
@@ -41,7 +42,7 @@ stages:
     #acrdevurl: 'k8sexamplesacr.azurecr.io'
     #replicaNo: 3
   jobs:
-  - deployment: Deploy
+  - job: Deploy
     displayName: Deploy to AKS
     #environment: 'k8sdev.default'
     pool: 
