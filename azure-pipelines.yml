@@ -88,8 +88,8 @@ stages:
     
     - script: |
         # be sure to change the score-threshold value to control the minimum accepted asset score before CI jobs fail
-        #cnspec scan k8s --path $(Pipeline.Workspace)/manifests/deployment.yml --score-threshold 100
-        cnspec scan k8s --path /home/vsts/work/1/manifests/deployment.yml --score-threshold 100
+        #cnspec scan k8s --path '$(Pipeline.Workspace)/manifests/deployment.yml' --score-threshold 100
+        
       displayName: "Scan Manifests with cnspec"
       #env:
       #  MONDOO_CONFIG_BASE64: $(MONDOO_CONFIG_BASE64)
