@@ -77,10 +77,18 @@ stages:
         imagePullSecrets: '$(k8s-secret)'
 
 
-- stage: ScanwithCnspec
+- stage: Scan
+  displayName: Scan with Cnspec
+  dependsOn: Deploy
   jobs:
   - job: ScanImage
     steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'manifests'
+        targetPath: '$(Pipeline.Workspace)/manifests'
+        
     - script: |
         bash -c "$(curl -sSL https://install.mondoo.com/sh)"
         cnspec version
