@@ -5,11 +5,7 @@ resources:
 - repo: self
 
 variables:
-  #imageRepo: sampleapp
   imageRepo: mondoo-app
-  #imageNamespace: sampleapp.azurecr.io
-  #imageName: sampleapp.azurecr.io:latest
-  #tag: '$(Build.BuildId)'
   tag: latest
 
 stages:
@@ -32,6 +28,7 @@ stages:
         tags: |
           $(tag)
           latest
+    # since in this example our manifest is located in our github, we use "Publish Pipeline Artifacts" in order to make the contents of the kubernetes folder which are our manifest files to any stage from now on
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Pipeline.Workspace)/s/kubernetes'
@@ -44,20 +41,20 @@ stages:
   variables:
     k8s-secret: k8sauth
     acrdevurl: 'securityimages.azurecr.io'
-    #replicaNo: 3
   jobs:
   - job: Deploy
     displayName: Deploy to AKS
-    #environment: 'k8sdev.default'
     pool: 
       vmImage: ubuntu-latest
     steps:
+    # In the previou stage we published the artifacts to our pipeline, and now we need to download it in the stages which we need them!
     - task: DownloadPipelineArtifact@2
       inputs:
         buildType: 'current'
         artifactName: 'manifests'
         targetPath: '$(Pipeline.Workspace)/manifests'
         # whenever the AKS cluster needs to pull an image from the azure container registry, it will use the following credential for that
+        # and this is due to the fact that Azure Container Registery is Private
     - task: KubernetesManifest@0
       inputs:
         action: 'createSecret'
@@ -98,6 +95,7 @@ stages:
     - script: |
         # be sure to change the score-threshold value to control the minimum accepted asset score before CI jobs fail
         cnspec scan k8s --path '$(Pipeline.Workspace)/manifests/deployment.yml' --score-threshold 100
+        cnspec scan k8s --path '$(Pipeline.Workspace)/manifests/service.yml' --score-threshold 100
       displayName: "Scan Manifests with cnspec"
-      #env:
-      #  MONDOO_CONFIG_BASE64: $(MONDOO_CONFIG_BASE64)
+      env:
+        MONDOO_CONFIG_BASE64: $(MONDOO_CONFIG_BASE64)
