@@ -1,19 +1,19 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: sampleapp 
+  name: mondoo-app 
 spec:
   replicas: #replicaNo#
   selector:
     matchLabels:
-      app: sampleapp
+      app: mondoo-app
   template:
     metadata:
       labels:
-        app: sampleapp 
+        app: mondoo-app 
     spec:
       containers:
-        - name: sampleapp 
-          image: securityimages.azurecr.io/sampleapp:latest
+        - name: mondoo-app 
+          image: securityimages.azurecr.io/mondoo-app:latest
           ports:
           - containerPort: 80
