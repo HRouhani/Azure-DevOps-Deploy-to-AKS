@@ -5,7 +5,8 @@ resources:
 - repo: self
 
 variables:
-  imageRepo: sampleapp
+  #imageRepo: sampleapp
+  imageRepo: mondoo-app
   #imageNamespace: sampleapp.azurecr.io
   #imageName: sampleapp.azurecr.io:latest
   #tag: '$(Build.BuildId)'
@@ -14,7 +15,7 @@ variables:
 stages:
 
 - stage: Build
-  displayName: Build image
+  displayName: Build and push the image
   jobs:
   - job: Build
     displayName: Build
@@ -22,7 +23,7 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build and Push image
       inputs:
         containerRegistry: 'AzureRegistery'
         repository: '$(imageRepo)'
@@ -38,7 +39,7 @@ stages:
         publishLocation: 'pipeline'
         
 - stage: Deploy
-  displayName: Deploy to Dev
+  displayName: Deploy to Kubernetes Cluster
   dependsOn: Build
   variables:
     k8s-secret: k8sauth
